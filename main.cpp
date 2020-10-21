@@ -4,22 +4,31 @@ using namespace std;
 
 int main()
 {
-    /*
+
     short method;
     int seed;
-    string archivo_natural = "test.txt";
+    string archivo_natural;
 
-    cout<<"Ingrese el metodo de codificacion deseado y la semilla: ";
-    cin>>method>>seed;*/
+    cout<<"Ingrese el nombre del archivo (sin extencion de archivo) metodo de codificacion deseado y la semilla: ";
+    cin>>archivo_natural>>method>>seed;
 
-    string test;
-    cin>>test;
+    encrypt(archivo_natural, method, seed);
 
-    test = text_to_bin(test);
+    //unsigned long long size = size_of_file(name);
 
-    partition(test, 3);
+    //char *data_char = new char[size];
+    //char *res_char = new char[size*8];
 
-    cout<<test<<endl;
+    //leer_txt(name, data_char);
+
+    //cout<<"\n"<<data_char<<endl;
+
+    //text_to_bin(data_char, res_char);
+
+    //cout<<"\n"<<res_char<<endl;
+
+    //delete [] data_char;
+    //delete [] res_char;
 
     return 0;
 }
