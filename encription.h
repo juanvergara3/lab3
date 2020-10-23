@@ -9,10 +9,18 @@
 using namespace std;
 
 void encrypt(string name, short method,  int seed);
+void decrypt(string name, short method,  int seed);
+
 string text_to_bin(string text);
 void text_to_bin(char *text, char *res);
-void partition(string bin, int seed);
-string method_1(string data, int seed);
-void method_2(char *data, int seed);
+
+string bin_to_text(string text);
+void bin_to_text(char *text, char *res);
+
+string encrypt_method_1(string data, int seed);
+void encrypt_method_2(char *data, int seed);
+
+string decrypt_method_1(string data, int seed);
+void decrypt_method_2(char *data, int seed);
 
 #endif // ENCRIPTION_H

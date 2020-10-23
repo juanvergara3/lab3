@@ -1,6 +1,6 @@
 #include "file_handling.h"
 
-void escribir_txt(string name, string data) {
+void write_file(string name, string data) {
 
     fstream file (name, fstream::out | fstream::binary);
 
@@ -11,7 +11,7 @@ void escribir_txt(string name, string data) {
     file.close();
 }
 
-void escribir_txt(string name, char *data){
+void write_file(string name, char *data){
 
     fstream file (name, fstream::out | fstream::binary);
 
@@ -68,7 +68,7 @@ string leer_txt(string name) { //letra a letra
     }
 }*/
 
-string leer_txt(string name) { //duda con el EOF
+string read_file(string name) { //duda con el EOF
 
     fstream file(name, fstream::in);
 
@@ -97,19 +97,7 @@ string leer_txt(string name) { //duda con el EOF
     }
 }
 
-unsigned long long size_of_file(string name){
-
-    unsigned long long size;
-
-    fstream file(name, fstream::in | fstream ::ate);
-
-    size = file.tellg();
-
-    file.close();
-    return size;
-}
-
-void leer_txt(string name, char *res){ //duda con el EOF
+void read_file(string name, char *res){ //duda con el EOF
 
     fstream file(name, fstream::in);
 
@@ -130,6 +118,27 @@ void leer_txt(string name, char *res){ //duda con el EOF
 
     }
     else cout<<"Error de apertura!"<<endl;
+}
+
+unsigned long long size_of_file(string name){
+
+    fstream file(name, fstream::in | fstream ::ate);
+
+     if(file.is_open()){
+
+         unsigned long long size;
+
+         size = file.tellg();
+
+         file.close();
+
+         return size;
+     }
+
+     else{
+         cout<<"Error de apertura!"<<endl;
+         return 0;
+     }
 }
 
 unsigned long long size_of_array(char *array){

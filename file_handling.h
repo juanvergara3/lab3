@@ -7,10 +7,10 @@
 
 using namespace std;
 
-void escribir_txt(string name, string data);
-void escribir_txt(string name, char *data);
-string leer_txt(string name);
-void leer_txt(string name, char *res);
+void write_file(string name, string data);
+void write_file(string name, char *data);
+string read_file(string name);
+void read_file(string name, char *res);
 unsigned long long size_of_file(string name);
 unsigned long long size_of_array(char *array);
 

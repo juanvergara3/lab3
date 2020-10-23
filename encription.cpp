@@ -4,21 +4,41 @@ void encrypt(string name, short method, int seed){
 
     if(method == 1){
         string text;
-        text = leer_txt(name+".txt");
+
+        text = read_file(name+".txt");
 
         text = text_to_bin(text);
 
-        text = method_1(text, seed);
+        text = encrypt_method_1(text, seed);
 
-        escribir_txt(name+".dat", text);
+        write_file(name+".dat", text);
     }
     else if(method == 2){
-        //unsigned long long size = size_of_file(name);
-        //char *data_char = new char[size];
-        //char *res_char = new char[size*8];
+
+        unsigned long long size = size_of_file(name+".txt");
+
+        char *data_char = new char[size+1];
+
+        read_file(name+".txt", data_char);
+
+        char *bin_char = new char[size*8];
+
+        text_to_bin(data_char, bin_char);
+
+        delete [] data_char;
+
+       encrypt_method_2(bin_char, seed);
+
+       write_file(name+".dat", bin_char);
+
+        delete [] bin_char;
 
     }
     else cout<<"Metodo invalido."<<endl;
+}
+
+void decrypt(string name, short method, int seed){
+
 }
 
 string text_to_bin(string text){
@@ -36,22 +56,33 @@ string text_to_bin(string text){
     return bin;
 }
 
-void text_to_bin(char *text, char *res){ //revisar******
+void text_to_bin(char *text, char *res){
 
     unsigned long long size = size_of_array(text);
     unsigned long long index = 0;
 
-    for(unsigned long long i = 0; i<size-1; i++){
+    for(unsigned long long i = 0; i<size; i++){
 
         for(int k = 0; k<8; k++){
 
-            res[index] = ( char( ( ((text[i]<<k)&(0x80))/128) + 48 ) );
-            index++;
-
+            if(text[i] != '\0'){
+                res[index] = ( char( ( ((text[i]<<k)&(0x80))/128) + 48 ) );
+                index++;
+            }
+            else res[index] = '\0';
         }
     }
 }
 
+string bin_to_text(string text){
+
+}
+
+void bin_to_text(char *text, char *res){
+
+}
+
+/*
 void partition(string bin, int seed){ //Possibly useless
     string partitioned;
 
@@ -68,9 +99,9 @@ void partition(string bin, int seed){ //Possibly useless
            partitioned.clear();
        }
    }
-}
+}*/
 
-string method_1(string data, int seed){
+string encrypt_method_1(string data, int seed){
 
     string partitioned, prev, result;
     int ones, ceros;
@@ -157,6 +188,49 @@ string method_1(string data, int seed){
     return result;
 }
 
-void method_2(string name, char *data, int seed){ //terminar***
+string decrypt_method_1(string data, int seed){
 
 }
+
+void encrypt_method_2(char *data, int seed){
+
+    unsigned long long size  = size_of_array(data);
+
+    unsigned long long seed_reference = seed;
+
+    char *group = new char[seed+1]; //tiene en cuenta el \0
+
+    for(unsigned long long current_index = 0, previous_index = 0, group_index = 0; current_index<size; current_index++){
+
+        group[group_index] = data[current_index];
+        group_index++;
+
+        if( current_index - previous_index + 1== seed_reference){
+
+            previous_index = current_index + 1;
+
+            group_index--;
+
+            for(int it = 0, temp = seed; it<seed; it++, group_index++){
+
+                data[ (current_index + 1) - temp ] = group[group_index];
+
+                temp--;
+
+                if(group_index == seed_reference -1){
+                    group_index = -1;
+                }
+
+            }
+
+            group_index = 0;
+        }
+    }
+    delete[] group;
+}
+
+void decrypt_method_2(char *data, int seed){
+
+}
+
+
