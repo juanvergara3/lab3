@@ -14,7 +14,9 @@ int main()
 
     //encrypt(archivo_natural, method, seed);
 
-    encrypt("test",2,4);
+    //encrypt("test",1,4);
+
+    decrypt("test",1,4);
 
     return 0;
 }
