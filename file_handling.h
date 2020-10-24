@@ -9,7 +9,7 @@
 using namespace std;
 
 void write_file(string name, string data);
-void write_file(string name, char *data);
+void write_file(string name, unsigned long long size, char *data);
 
 string read_file(string name);
 void read_file(string name, char *res);

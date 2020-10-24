@@ -11,17 +11,13 @@ void write_file(string name, string data) {
     file.close();
 }
 
-void write_file(string name, char *data){
-
-    //cout<<size_of_file(name)<<endl;
+void write_file(string name, unsigned long long size, char *data){
 
     fstream file (name, fstream::out | fstream::binary);
 
-    file.write(data, size_of_array(data));
+    file.write(data, size);
 
     file.close();
-
-    //cout<<size_of_file(name)<<endl;
 
 }
 
@@ -49,31 +45,9 @@ string leer_txt(string name) { //linea a linea
        cout<<"Error de apertura!"<<endl;
        return "";
     }
-}
-string leer_txt(string name) { //letra a letra
-
-    fstream file(name, fstream::in);
-
-    if(file.is_open()){
-
-        string res;
-
-        while(! file.eof() ){
-
-            res.push_back(file.get());
-
-        }
-        file.close();
-
-        return res;
-
-    } else{
-       cout<<"Error de apertura!"<<endl;
-       return "";
-    }
 }*/
 
-string read_file(string name) { //duda con el EOF
+string read_file(string name) {
 
     fstream file(name, fstream::in | fstream::binary);
 
@@ -102,7 +76,7 @@ string read_file(string name) { //duda con el EOF
     }
 }
 
-void read_file(string name, char *res){ //duda con el EOF
+void read_file(string name, char *res){
 
     fstream file(name, fstream::in | fstream::binary);
 
@@ -116,7 +90,7 @@ void read_file(string name, char *res){ //duda con el EOF
             temp = file.get();
 
             if(temp != EOF) res[k] = temp;
-
+            else res[k] = '\0';
         }
 
         file.close();
@@ -146,7 +120,7 @@ unsigned long long size_of_file(string name){
      }
 }
 
-unsigned long long size_of_array(char *array){
+unsigned long long size_of_array(char *array){ //Posiblemente inutil
 
     unsigned long long size = 0;
 

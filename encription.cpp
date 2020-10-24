@@ -2,7 +2,7 @@
 
 void encrypt(string name, short method, int seed){
 
-    if(method == 1){
+    if(method == 1){ //pendiente
         string text;
 
         text = read_file(name+".txt");
@@ -20,18 +20,18 @@ void encrypt(string name, short method, int seed){
 
         unsigned long long size = size_of_file(name+".txt");
 
-        char data_char[size+1];
-        char bin_char[((size-1)*8)+1];
+        char data_char[size];
+        char bin_char[size*8];
 
         read_file(name+".txt", data_char);
 
-        text_to_bin(data_char, bin_char);
+        text_to_bin(data_char, size, bin_char);
 
-        encrypt_method_2(bin_char, seed);
+        encrypt_method_2(bin_char, size*8, seed);
 
-        bin_to_text(bin_char, data_char);
+        bin_to_text(bin_char, size*8, data_char);
 
-        write_file(name+".dat", data_char);
+        write_file(name+".dat", size, data_char);
 
     }
     else cout<<"Metodo invalido."<<endl;
@@ -39,7 +39,7 @@ void encrypt(string name, short method, int seed){
 
 void decrypt(string name, short method, int seed){
 
-    if(method == 1){
+    if(method == 1){ //pendiente
 
         string text;
 
@@ -58,18 +58,18 @@ void decrypt(string name, short method, int seed){
 
         unsigned long long size = size_of_file(name+".dat");
 
-        char data_char[size+1];
-        char bin_char[((size-1)*8)+1];
+        char data_char[size];
+        char bin_char[size*8];
 
         read_file(name+".dat", data_char);
 
-        text_to_bin(data_char, bin_char);
+        text_to_bin(data_char, size, bin_char);
 
-        decrypt_method_2(bin_char, seed);
+        decrypt_method_2(bin_char, size*8, seed);
 
-        bin_to_text(bin_char, data_char);
+        bin_to_text(bin_char, size*8, data_char);
 
-       write_file(name+".txt", data_char);
+       write_file(name+".txt", size, data_char);
 
     }
     else cout<<"Metodo invalido."<<endl;
@@ -90,10 +90,10 @@ string text_to_bin(string text){
     return bin;
 }
 
-void text_to_bin(char *text, char *res){
+void text_to_bin(char *text, unsigned long long size, char *res){
 
-    unsigned long long size = size_of_array(text);
-    unsigned long long index = 0;
+    //unsigned long long size = size_of_array(text);
+    /*unsigned long long index = 0;
 
     for(unsigned long long i = 0; i<size; i++){
 
@@ -105,7 +105,21 @@ void text_to_bin(char *text, char *res){
             }
             else res[index] = '\0';
         }
+    }*/
+
+    unsigned long long index = 0;
+
+    for(unsigned long long i = 0; i<size; i++){
+
+        for(int k = 0; k<8; k++){
+
+
+                res[index] = ( char( ( ((text[i]<<k)&(0x80))/128) + 48 ) );
+                index++;
+
+        }
     }
+    res[index] = '\0';
 }
 
 string bin_to_text(string text){
@@ -141,12 +155,10 @@ string bin_to_text(string text){
     return res;
 }
 
-void bin_to_text(char *text, char *res){
+void bin_to_text(char *text, unsigned long long size, char *res){
 
     char *temp = new char[9];
     int bin, dec, rem, base, temp_index = 0, res_index  = 0;
-
-    unsigned long long size = size_of_array(text);
 
     for(unsigned long long i = 0; i<size; i++, temp_index++){
 
@@ -162,7 +174,7 @@ void bin_to_text(char *text, char *res){
 
             //int index = 0;
             //for (; temp[index]  != '\0'; ++index)
-                //bin = bin * 10 + temp[index] - '0';
+                //bin = bin * 10 + temp[index] - '0'; // borrar en el siguiente commit ****
 
             base = 1;
             dec = 0;
@@ -174,9 +186,9 @@ void bin_to_text(char *text, char *res){
                 bin = bin / 10;
             }
 
-            if(char(dec) == '\0') dec = 32; //wtf????
+            //if(char(dec) == '\0') dec = 32; //wtf????
 
-            if(char(dec) == '`') dec = 32; //What the actual damn
+            //if(char(dec) == '`') dec = 32; //What the actual damn //borrar en el siguiente commit ****
 
             res[res_index] = char(dec);
 
@@ -188,7 +200,7 @@ void bin_to_text(char *text, char *res){
     delete[] temp;
 }
 
-string encrypt_method_1(string data, int seed){
+string encrypt_method_1(string data, int seed){ //Pendiente
 
     string partitioned, prev, result;
     int ones, ceros;
@@ -275,7 +287,7 @@ string encrypt_method_1(string data, int seed){
     return result;
 }
 
-string decrypt_method_1(string data, int seed){
+string decrypt_method_1(string data, int seed){ //Pendiente
 
     string partitioned, prev, result;
     int ones, ceros;
@@ -365,9 +377,7 @@ string decrypt_method_1(string data, int seed){
 
 }
 
-void encrypt_method_2(char *data, int seed){
-
-    unsigned long long size  = size_of_array(data);
+void encrypt_method_2(char *data, unsigned long long size, int seed){
 
     unsigned long long seed_reference = seed;
 
@@ -404,9 +414,7 @@ void encrypt_method_2(char *data, int seed){
     delete[] group;
 }
 
-void decrypt_method_2(char *data, int seed){
-
-    unsigned long long size  = size_of_array(data);
+void decrypt_method_2(char *data, unsigned long long size, int seed){
 
     unsigned long long seed_reference = seed;
 
