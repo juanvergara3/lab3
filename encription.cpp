@@ -11,6 +11,8 @@ void encrypt(string name, short method, int seed){
 
         text = encrypt_method_1(text, seed);
 
+        text = bin_to_text(text);
+
         write_file(name+".dat", text);
     }
 
@@ -18,21 +20,18 @@ void encrypt(string name, short method, int seed){
 
         unsigned long long size = size_of_file(name+".txt");
 
-        char *data_char = new char[size+1];
+        char data_char[size+1];
+        char bin_char[((size-1)*8)+1];
 
         read_file(name+".txt", data_char);
 
-        char *bin_char = new char[size*8];
-
         text_to_bin(data_char, bin_char);
 
-        delete [] data_char;
+        encrypt_method_2(bin_char, seed);
 
-       encrypt_method_2(bin_char, seed);
+        bin_to_text(bin_char, data_char);
 
-       write_file(name+".dat", bin_char);
-
-        delete [] bin_char;
+        write_file(name+".dat", data_char);
 
     }
     else cout<<"Metodo invalido."<<endl;
@@ -46,40 +45,31 @@ void decrypt(string name, short method, int seed){
 
         text = read_file(name+".dat");
 
+        text = text_to_bin(text);
+
         text = decrypt_method_1(text, seed);
 
         text = bin_to_text(text);
 
-        cout<<text<<endl;
-
-        //write_file(name+".txt", text);
+        write_file(name+".txt", text);
     }
 
     else if(method == 2){
 
         unsigned long long size = size_of_file(name+".dat");
 
-        cout<<"Size of file: "<<size<<endl;
+        char data_char[size+1];
+        char bin_char[((size-1)*8)+1];
 
-        char *bin_char = new char[size+1];
+        read_file(name+".dat", data_char);
 
-        read_file(name+".dat", bin_char);
-
-        cout<<bin_char<<endl;
+        text_to_bin(data_char, bin_char);
 
         decrypt_method_2(bin_char, seed);
 
-        cout<<bin_char<<endl;
-
-        char *data_char = new char[size/8];
-
         bin_to_text(bin_char, data_char);
 
-        delete [] bin_char;
-
        write_file(name+".txt", data_char);
-
-       delete[] data_char;
 
     }
     else cout<<"Metodo invalido."<<endl;
@@ -120,10 +110,82 @@ void text_to_bin(char *text, char *res){
 
 string bin_to_text(string text){
 
+    string temp, res;
+    int bin, dec, rem, base;
+
+    for(unsigned long long i = 0; i<text.length(); i++){
+
+        temp += text[i];
+
+        if(temp.length() == 8){
+
+            bin = stoi(temp);
+
+            base = 1;
+            dec = 0;
+
+            while (bin > 0){
+                rem = bin % 10;
+                dec = dec + rem * base;
+                base = base * 2;
+                bin = bin / 10;
+            }
+
+            res += char(dec);
+
+            temp.clear();
+
+        }
+
+    }
+    return res;
 }
 
 void bin_to_text(char *text, char *res){
 
+    char *temp = new char[9];
+    int bin, dec, rem, base, temp_index = 0, res_index  = 0;
+
+    unsigned long long size = size_of_array(text);
+
+    for(unsigned long long i = 0; i<size; i++, temp_index++){
+
+        temp[temp_index] = text[i];
+
+        if(temp_index == 7){
+
+            temp_index = -1;
+
+            temp[8] = '\0';
+
+            sscanf(temp, "%d", &bin); //what
+
+            //int index = 0;
+            //for (; temp[index]  != '\0'; ++index)
+                //bin = bin * 10 + temp[index] - '0';
+
+            base = 1;
+            dec = 0;
+
+            while (bin > 0){
+                rem = bin % 10;
+                dec = dec + rem * base;
+                base = base * 2;
+                bin = bin / 10;
+            }
+
+            if(char(dec) == '\0') dec = 32; //wtf????
+
+            if(char(dec) == '`') dec = 32; //What the actual damn
+
+            res[res_index] = char(dec);
+
+            res_index++;
+
+        }
+    }
+
+    delete[] temp;
 }
 
 string encrypt_method_1(string data, int seed){
@@ -317,6 +379,8 @@ void encrypt_method_2(char *data, int seed){
         group_index++;
 
         if( current_index - previous_index + 1== seed_reference){ //cuando pasa un grupo
+
+             group[group_index] = '\0';
 
             previous_index = current_index + 1;
 

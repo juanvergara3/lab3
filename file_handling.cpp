@@ -13,11 +13,16 @@ void write_file(string name, string data) {
 
 void write_file(string name, char *data){
 
+    //cout<<size_of_file(name)<<endl;
+
     fstream file (name, fstream::out | fstream::binary);
 
     file.write(data, size_of_array(data));
 
     file.close();
+
+    //cout<<size_of_file(name)<<endl;
+
 }
 
 /*
@@ -70,16 +75,16 @@ string leer_txt(string name) { //letra a letra
 
 string read_file(string name) { //duda con el EOF
 
-    fstream file(name, fstream::in);
+    fstream file(name, fstream::in | fstream::binary);
 
     if(file.is_open()){
 
         string res;
         char temp;
 
-         long long size = size_of_file(name);
+         unsigned long long size = size_of_file(name);
 
-        for(long long k = 0; k<size; k++){
+        for(unsigned long long k = 0; k<size; k++){
 
             temp = file.get();
 
@@ -99,14 +104,14 @@ string read_file(string name) { //duda con el EOF
 
 void read_file(string name, char *res){ //duda con el EOF
 
-    fstream file(name, fstream::in);
+    fstream file(name, fstream::in | fstream::binary);
 
     if(file.is_open()){
 
-        long long size = size_of_file(name);
+        unsigned long long size = size_of_file(name);
         char temp;
 
-        for(long long k = 0; k<size; k++){
+        for(unsigned long long k = 0; k<size; k++){
 
             temp = file.get();
 
@@ -122,7 +127,7 @@ void read_file(string name, char *res){ //duda con el EOF
 
 unsigned long long size_of_file(string name){
 
-    fstream file(name, fstream::in | fstream ::ate);
+    fstream file(name, fstream::in | fstream ::ate | fstream::binary);
 
      if(file.is_open()){
 
@@ -153,5 +158,6 @@ unsigned long long size_of_array(char *array){
             break;
         }
     }
+
     return size;
 }

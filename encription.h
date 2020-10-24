@@ -18,9 +18,9 @@ string bin_to_text(string text);
 void bin_to_text(char *text, char *res);
 
 string encrypt_method_1(string data, int seed);
-void encrypt_method_2(char *data, int seed);
+void encrypt_method_2(char *data,  int seed);
 
 string decrypt_method_1(string data, int seed);
-void decrypt_method_2(char *data, int seed);
+void decrypt_method_2(char *data,  int seed);
 
 #endif // ENCRIPTION_H
