@@ -62,7 +62,7 @@ string read_file(string name) {
 
             temp = file.get();
 
-            if(temp != EOF) res.push_back(temp);
+            res.push_back(temp); //the EOF here was breaking my program smh
 
         }
 

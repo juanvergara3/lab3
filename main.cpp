@@ -24,10 +24,12 @@ int main()
 
     //write_file("poem.txt", data);
 
-    encrypt("poem", 2, 5);
-    decrypt("poem", 2, 5);
+    //encrypt("poem", 1, 10);
+    //decrypt("poem", 1, 10);
+    decrypt("M1S6", 1, 6);
 
-    data = read_file("poem.txt");
+    //data = read_file("poem.txt");
+    data = read_file("M1S6.txt");
 
     cout<<data<<endl<<endl;
 /*
@@ -52,61 +54,6 @@ int main()
     decrypt("poem",2,4);
 
     data = read_file("poem.txt");
-
-    cout<<data<<endl<<endl;*/
-
-    /*
-    unsigned long long ass = data.length();
-
-    char char_data[ass];
-    char bin_data[ass*8];
-
-    for(unsigned long long i = 0; i<ass; i++){
-
-        char_data[i] = data[i];
-
-        char_data[i+1] = '\0';
-
-    }
-
-
-    cout<<char_data<<endl;
-
-    text_to_bin(char_data, ass, bin_data);
-
-    cout<<bin_data<<endl;
-
-    bin_to_text(bin_data, ass*8, char_data);
-
-    cout<<"\n\n"<<char_data<<endl;*/
-
-    /*string data = "I met a traveller from an antique land,\n"
-                  "Who said-\"Two vast and trunkless legs of stone\n"
-                  "Stand in the desert. . . . Near them, on the sand,\n"
-                  "Half sunk a shattered visage lies, whose frown,\n"
-                  "And wrinkled lip, and sneer of cold command,\n";
-
-    write_file("test.txt", data);
-
-    encrypt("test", 2, 5);
-    decrypt("test", 2, 5);
-
-    data = read_file("test.txt");
-
-    cout<<data<<endl<<endl;
-
-    data = "I met a traveller from an antique land,\n"
-           "Who said-\"Two vast and trunkless legs of stone\n"
-           "Stand in the desert. . . . Near them, on the sand,\n"
-           "Half sunk a shattered visage lies, whose frown,\n"
-           "And wrinkled lip, and sneer of cold command,\n";
-
-    write_file("test.txt", data);
-
-    encrypt("test", 2, 4);
-    decrypt("test", 2, 4);
-
-    data = read_file("test.txt");
 
     cout<<data<<endl<<endl;*/
 
