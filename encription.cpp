@@ -202,178 +202,174 @@ void bin_to_text(char *text, unsigned long long size, char *res){
 
 string encrypt_method_1(string data, int seed){ //Pendiente
 
-    string partitioned, prev, result;
-    int ones, ceros;
+    unsigned long long seed_reference = seed;
 
-    for(int i = 0; i<seed; i++){ //se toma el primer grupo
+    string group, prev, res;
 
-        partitioned.push_back(data[i]);
+    bool first = false;
 
-    }
+    int ceros, unos;
 
-    prev = partitioned; //se guarda el primer grupo sin codificar para despues
+    for(unsigned long long current_index = 0, previous_index = 0; current_index<data.length(); current_index++){ //recorre todo el string data
 
-    for(int k = 0; k < seed; k++){ //se invierten todos los bits
+        group += data[current_index]; //crea un grupo de tamaño seed
 
-        if(partitioned[k]  == '0') partitioned[k] = '1';
-        else partitioned[k] = '0';
+        if( current_index - previous_index + 1 == seed_reference){ //cuando pasa un grupo
 
-    }
+            previous_index = current_index + 1;
 
-    result.append(partitioned);
-    partitioned.clear();
+           if(first == false){ //para el primer grupo
 
-    for(unsigned long long i = seed, k = 1; i < data.length(); i++){ //empieza desde el segundo grupo
+               prev = group;
 
-        partitioned.push_back(data[i]);
+               for(unsigned long long k = 0; k<group.length(); k++){ //invierte todos los bits del primer grupo
 
-        if((k+1)*seed-1 == i){
+                   if(group[k] == '0') group[k] = '1';
+                   else if (group[k] == '1') group[k] = '0';
 
-            k++;
+               }
 
-            ones = count(prev.begin(), prev.end(), '1'); //se halla la cantidad de 1s y 0s en el grupo anterior
-            ceros = count(prev.begin(), prev.end(), '0'); //para poder aplicar las reglas de codificacion
+               res = group;
+               first = true;
+           }
 
-            prev = partitioned; //se toma el grupo actual sin codificar para usar en la siguiente iteracion
+           else{//para los demas grupos
 
-            for(int w = 0, index = 1; w<seed; w++){ // recorre cada grupo
+               unos = count(prev.begin(), prev.end(), '1'); //se halla la cantidad de 1s y 0s en el grupo anterior
+               ceros = count(prev.begin(), prev.end(), '0'); //para poder aplicar las reglas de codificacion
 
-                if(ceros == ones){ // cada bit del grupo se invierte
+               prev.clear();
+               prev = group;
 
-                    if(partitioned[w]  == '0') partitioned[w] = '1';
-                    else if(partitioned[w]  == '1') partitioned[w] = '0';
-                }
+               if(ceros == unos){ //invierte todos los bits
 
-                else if(ceros > ones){ //se invierte cada 2 bits
+                   for(unsigned long long k = 0; k<group.length(); k++){
 
-                    if(index == 2){
+                       if(group[k] == '0') group[k] = '1';
+                       else if (group[k] == '1') group[k] = '0';
 
-                        if(partitioned[w]  == '0') {
-                            partitioned[w] = '1';
-                            index = 1;
-                        }
-                        else if(partitioned[w]  == '1') {
-                            partitioned[w] = '0';
-                            index = 1;
-                        }
-                    }
-                    else index++;
-                }
+                   }
+               }
+               else if (ceros>unos){
 
-                else if(ceros < ones){ //se invierte cada 3 bits
+                   for(unsigned long long k = 0; k<group.length(); k++){
 
-                    if(index == 3){
+                       if((k+1)%2 == 0){
 
-                        if(partitioned[w]  == '0') {
-                            partitioned[w] = '1';
-                            index = 1;
-                        }
-                        else if(partitioned[w]  == '1') {
-                            partitioned[w] = '0';
-                            index = 1;
-                        }
-                    }
-                    else index++;
-                }
+                           if(group[k] == '0') group[k] = '1';
+                           else if (group[k] == '1') group[k] = '0';
 
-            } //final del for que recorre cada grupo
+                       }
+                   }
+               }
+               else if(ceros < unos){
 
-            result.append(partitioned);
+                   for(unsigned long long k = 0; k<group.length(); k++){
 
-            partitioned.clear();
+                       if((k+1)%3 == 0){
+
+                           if(group[k] == '0') group[k] = '1';
+                           else if (group[k] == '1') group[k] = '0';
+
+                       }
+                   }
+               }
+               res += group;
+           }
+
+           //para todos los grupos:
+
+           group.clear();
 
         }
     }
-    return result;
+    return res;
 }
 
 string decrypt_method_1(string data, int seed){ //Pendiente
 
-    string partitioned, prev, result;
-    int ones, ceros;
+    unsigned long long seed_reference = seed;
 
-    for(int i = 0; i<seed; i++){ //se toma el primer grupo
+    string group, prev, res;
 
-        partitioned.push_back(data[i]);
+    bool first = false;
 
-    }
+    int ceros, unos;
 
-    for(int k = 0; k < seed; k++){ //se invierten todos los bits
+    for(unsigned long long current_index = 0; current_index<data.length(); current_index++){ //recorre todo el string data
 
-        if(partitioned[k]  == '0') partitioned[k] = '1';
-        else partitioned[k] = '0';
+        group += data[current_index]; //crea un grupo de tamaño seed
 
-    }
+        if( group.length() == seed_reference){ //cuando pasa un grupo
 
-    prev = partitioned;//se guarda el primer grupo sin codificar para despues
+           if(first == false){ //para el primer grupo
 
-    result.append(partitioned);
-    partitioned.clear();
+               for(unsigned long long k = 0; k<group.length(); k++){ //invierte todos los bits del primer grupo
 
-    for(unsigned long long i = seed, k = 1; i < data.length(); i++){ //empieza desde el segundo grupo
+                   if(group[k] == '0') group[k] = '1';
+                   else if (group[k] == '1') group[k] = '0';
 
-        partitioned.push_back(data[i]);
+               }
 
-        if((k+1)*seed-1 == i){
+               prev = group;
 
-            k++;
+               res = group;
+               first = true;
+           }
 
-            ones = count(prev.begin(), prev.end(), '1'); //se halla la cantidad de 1s y 0s en el grupo anterior
-            ceros = count(prev.begin(), prev.end(), '0'); //para poder aplicar las reglas de codificacion
+           else{//para los demas grupos
 
-            //prev = partitioned; //se toma el grupo actual sin codificar para usar en la siguiente iteracion
+               unos = count(prev.begin(), prev.end(), '1'); //se halla la cantidad de 1s y 0s en el grupo anterior
+               ceros = count(prev.begin(), prev.end(), '0'); //para poder aplicar las reglas de codificacion
 
-            for(int w = 0, index = 1; w<seed; w++){ // recorre cada grupo
+               prev.clear();
 
-                if(ceros == ones){ // cada bit del grupo se invierte
+               if(ceros == unos){ //invierte todos los bits
 
-                    if(partitioned[w]  == '0') partitioned[w] = '1';
-                    else if(partitioned[w]  == '1') partitioned[w] = '0';
-                }
+                   for(unsigned long long k = 0; k<group.length(); k++){
 
-                else if(ceros > ones){ //se invierte cada 2 bits
+                       if(group[k] == '0') group[k] = '1';
+                       else if (group[k] == '1') group[k] = '0';
 
-                    if(index == 2){
+                   }
+               }
+               else if (ceros>unos){
 
-                        if(partitioned[w]  == '0') {
-                            partitioned[w] = '1';
-                            index = 1;
-                        }
-                        else if(partitioned[w]  == '1') {
-                            partitioned[w] = '0';
-                            index = 1;
-                        }
-                    }
-                    else index++;
-                }
+                   for(unsigned long long k = 0; k<group.length(); k++){
 
-                else if(ceros < ones){ //se invierte cada 3 bits
+                       if((k+1)%2 == 0){
 
-                    if(index == 3){
+                           if(group[k] == '0') group[k] = '1';
+                           else if (group[k] == '1') group[k] = '0';
 
-                        if(partitioned[w]  == '0') {
-                            partitioned[w] = '1';
-                            index = 1;
-                        }
-                        else if(partitioned[w]  == '1') {
-                            partitioned[w] = '0';
-                            index = 1;
-                        }
-                    }
-                    else index++;
-                }
+                       }
+                   }
+               }
+               else if(ceros < unos){
 
-            } //final del for que recorre cada grupo
+                   for(unsigned long long k = 0; k<group.length(); k++){
 
-            prev = partitioned; //se toma el grupo actual sin codificar para usar en la siguiente iteracion
+                       if((k+1)%3 == 0){
 
-            result.append(partitioned);
+                           if(group[k] == '0') group[k] = '1';
+                           else if (group[k] == '1') group[k] = '0';
 
-            partitioned.clear();
+                       }
+                   }
+               }
+
+               prev = group;
+
+               res.append(group);
+           }
+
+           //para todos los grupos:
+
+           group.clear();
 
         }
     }
-    return result;
+    return res;
 
 }
 
