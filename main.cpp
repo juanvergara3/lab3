@@ -1,61 +1,216 @@
 #include <iostream>
 #include "encription.h"
+#include "atm.h"
 using namespace std;
 
 int main()
 {
+    bool running = true, sub_menu = true, validation;
+    string user, password, amount;
+    short main_menu, user_menu;
+    int retiro;
 
-    string data;
+    while(running){
 
-    data = "I met a traveller from an antique land,\n"
-            "Who said-\"Two vast and trunkless legs of stone\n"
-            "Stand in the desert. . . . Near them, on the sand,\n"
-            "Half sunk a shattered visage lies, whose frown,\n"
-            "And wrinkled lip, and sneer of cold command,\n"
-            "Tell that its sculptor well those passions read\n"
-            "Which yet survive, stamped on these lifeless things,\n"
-            "The hand that mocked them, and the heart that fed;\n"
-            "And on the pedestal, these words appear:\n"
-            "My name is Ozymandias, King of Kings;\n"
-            "Look on my Works, ye Mighty, and despair!\n"
-            "Nothing beside remains. Round the decay\n"
-            "Of that colossal Wreck, boundless and bare\n"
-            "The lone and level sands stretch far away\".";
+        cout<<"\nIngrese 1 para iniciar sesion, 2 para acceder al modo administrador, o -1 para salir: "; cin>>main_menu;
 
-    //write_file("poem.txt", data);
+        while(cin.fail()) { //validacion de entrada
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cout << "Opcion no valida"<<endl;
+            cout<<"\nIngrese 1 para iniciar sesion, 2 para acceder al modo administrador, o -1 para salir: "; cin>>main_menu;
+        }
 
-    //encrypt("poem", 1, 10);
-    //decrypt("poem", 1, 10);
-    decrypt("M1S6", 1, 6);
+        switch (main_menu) {
 
-    //data = read_file("poem.txt");
-    data = read_file("M1S6.txt");
+        case 1:{
 
-    cout<<data<<endl<<endl;
-/*
-    data = "I met a traveller from an antique land,\n"
-            "Who said-\"Two vast and trunkless legs of stone\n"
-            "Stand in the desert. . . . Near them, on the sand,\n"
-            "Half sunk a shattered visage lies, whose frown,\n"
-            "And wrinkled lip, and sneer of cold command,\n"
-            "Tell that its sculptor well those passions read\n"
-            "Which yet survive, stamped on these lifeless things,\n"
-            "The hand that mocked them, and the heart that fed;\n"
-            "And on the pedestal, these words appear:\n"
-            "My name is Ozymandias, King of Kings;\n"
-            "Look on my Works, ye Mighty, and despair!\n"
-            "Nothing beside remains. Round the decay\n"
-            "Of that colossal Wreck, boundless and bare\n"
-            "The lone and level sands stretch far away\".";
+            cout<<"- - - - - - - - - - - -"<<endl;
 
-    write_file("poem.txt", data);
+            while(true){
+                cout<<"Ingrese su cedula (-1 para salir)  y clave: "<<endl;
 
-    encrypt("poem",2,4);
-    decrypt("poem",2,4);
+                cout<<"Cedula: "; cin>>user;
 
-    data = read_file("poem.txt");
+                if(user == "-1") break;
 
-    cout<<data<<endl<<endl;*/
+                cout<<"Contrasena: "; cin>>password;
+
+                validation = validate_user(user, password);
+
+                password.clear();
+
+                if(validation){
+
+                    sub_menu = true;
+
+                    while(sub_menu){
+
+                        cout<<"Bienvenido. Ingrese 1 para consultar saldo, 2 para retirar o -1 para salir: "; cin>>user_menu;
+
+                        while(cin.fail()) { //validacion de entrada
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                            cout << "Opcion no valida"<<endl;
+                            cout<<"Ingrese 1 para consultar saldo, 2 para retirar o -1 para salir: "; cin>>user_menu;
+                        }
+
+                        switch(user_menu){
+
+                        case 1:{ //consultar saldo
+
+                            withdraw(user, 1000);
+
+                            check_balance(user);
+
+                            break;
+                        }
+                        case 2:{ //retirar
+
+                            while(true){
+                                cout<<"Ingrese la cantidad a retirar: "; cin>>retiro;
+
+                                while(cin.fail()) { //validacion de entrada
+                                    cin.clear();
+                                    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                                    cout << "Cantidad no valida"<<endl;
+                                    cout<<"Ingrese la cantidad a retirar: "; cin>>user_menu;
+                                }
+
+                                if(retiro>0){
+
+                                    withdraw(user, retiro);
+
+                                    break;
+                                }
+                                else cout<<"Cantidad no valida"<<endl;
+                            }
+
+                            retiro = 0;
+                            user.clear();
+
+                            break;
+                        }
+                        case -1:{
+                            sub_menu = false;
+                            break;
+                        }
+                        default:{
+                            cout<<"Opcion no valida"<<endl;
+                            break;
+                        }
+
+                        } // final switch
+                    } // final while interno
+                } // final if
+
+                else cout<<"cedula o clave incorrectos"<<endl;
+
+            } // final while externo
+
+            cout<<"- - - - - - - - - - - -"<<endl;
+
+            break;
+        }
+
+        case 2:{
+
+            cout<<"- - - - - - - - - - - -"<<endl;
+
+            while(true){
+
+                cout<<"Ingrese la contrasena de administrador (-1 para salir):"<<endl;
+
+                cout<<"Contrasena: "; cin>>password;
+
+                if(password == "-1") break;
+
+                validation = validate_user("admin", password);
+
+                password.clear();
+
+                if(validation){
+
+                    sub_menu = true;
+
+                    while(sub_menu){
+
+                        cout<<"Bienvenido Admin. Ingrese 1 para agregar un usuario o -1 para salir: "; cin>>user_menu;
+
+                        while(cin.fail()) { //validacion de entrada
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                            cout << "Opcion no valida"<<endl;
+                            cout<<"Ingrese 1 para agregar un usuario o -1 para salir: "; cin>>user_menu;
+                        }
+
+                        switch(user_menu){
+
+                        case 1:{ // añadir usuario
+
+                            while(true){
+
+                                cout<<"Ingrese los datos del nuevo usuario:"<<endl;
+
+                                cout<<"Cedula: "; cin>>user;
+                                cout<<"Clave: "; cin>>password;
+                                cout<<"Saldo: "; cin>>amount;
+                                cout<<"Ingrese 0 para cancelar o 1 para confirmar: "; cin>>validation; // keep an eye on this ******
+
+                                while(cin.fail()) { //validacion de entrada
+                                    cin.clear();
+                                    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                                    cout << "Opcion no valida"<<endl;
+                                    cout<<"Ingrese 0 para cancelar o 1 para confirmar: "; cin>>validation;
+                                }
+
+                                if(validation){
+                                   register_user(user, password, amount);
+                                   break;
+                                }
+                            }
+
+                            password.clear();
+                            amount.clear();
+                            user.clear();
+
+                            break;
+                        }
+                        case -1:{
+                            sub_menu = false;
+                            break;
+                        }
+                        default:{
+                            cout<<"Opcion no valida"<<endl;
+                            break;
+                        }
+                        } // final switch
+
+                    } // final while interno
+
+                } // final if
+
+                else cout<<"Contrasena incorrecta"<<endl;
+
+            } //final while externo
+
+            cout<<"- - - - - - - - - - - -"<<endl;
+
+            break;
+        }
+
+        case -1:{
+            running = false;
+            break;
+        }
+
+        default:{
+            cout<<"Opcion no valida"<<endl;
+            break;
+        }
+
+        }//final switch principal
+    }//final del while principal
 
     return 0;
 }
