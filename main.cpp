@@ -7,8 +7,10 @@ int main()
 {
     bool running = true, sub_menu = true, validation;
     string user, password, amount;
-    short main_menu, user_menu;
-    int retiro;
+    short main_menu, user_menu, method = 1;
+    int retiro, seed = 4;
+
+    //encrypt("users", "", 1 ,4);
 
     while(running){
 
@@ -23,7 +25,7 @@ int main()
 
         switch (main_menu) {
 
-        case 1:{
+        case 1:{ //usuario
 
             cout<<"- - - - - - - - - - - -"<<endl;
 
@@ -36,11 +38,13 @@ int main()
 
                 cout<<"Contrasena: "; cin>>password;
 
-                validation = validate_user(user, password);
+                validation = validate_user(user, password, method, seed);
 
                 password.clear();
 
                 if(validation){
+
+                    withdraw(user, 1000, method, seed);
 
                     sub_menu = true;
 
@@ -59,9 +63,7 @@ int main()
 
                         case 1:{ //consultar saldo
 
-                            withdraw(user, 1000);
-
-                            check_balance(user);
+                             check_balance(user, method, seed);
 
                             break;
                         }
@@ -79,7 +81,7 @@ int main()
 
                                 if(retiro>0){
 
-                                    withdraw(user, retiro);
+                                    withdraw(user, retiro, method, seed);
 
                                     break;
                                 }
@@ -113,7 +115,7 @@ int main()
             break;
         }
 
-        case 2:{
+        case 2:{ //administrador
 
             cout<<"- - - - - - - - - - - -"<<endl;
 
@@ -125,7 +127,7 @@ int main()
 
                 if(password == "-1") break;
 
-                validation = validate_user("admin", password);
+                validation = validate_user("admin", password,1, 4);
 
                 password.clear();
 
@@ -165,7 +167,7 @@ int main()
                                 }
 
                                 if(validation){
-                                   register_user(user, password, amount);
+                                   register_user(user, password, amount, method, seed);
                                    break;
                                 }
                             }

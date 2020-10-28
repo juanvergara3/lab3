@@ -1,11 +1,10 @@
 #include "encription.h"
 
-void encrypt(string name, short method, int seed){
+void encrypt(string name, string text, short method, int seed){
 
-    if(method == 1){ //pendiente
-        string text;
+    if(method == 1){
 
-        text = read_file(name+".txt");
+        //text = read_file(name+".txt");
 
         text = text_to_bin(text);
 
@@ -18,12 +17,16 @@ void encrypt(string name, short method, int seed){
 
     else if(method == 2){
 
-        unsigned long long size = size_of_file(name+".txt");
+        //unsigned long long size = size_of_file(name+".txt");
+
+         unsigned long long size = text.length()+1;
 
         char data_char[size];
         char bin_char[size*8];
 
-        read_file(name+".txt", data_char);
+        strcpy (data_char, text.c_str());
+
+        //read_file(name+".txt", data_char);
 
         text_to_bin(data_char, size, bin_char);
 
@@ -37,11 +40,11 @@ void encrypt(string name, short method, int seed){
     else cout<<"Metodo invalido."<<endl;
 }
 
-void decrypt(string name, short method, int seed){
+string decrypt(string name, short method, int seed){
 
-    if(method == 1){ //pendiente
+    string text;
 
-        string text;
+    if(method == 1){
 
         text = read_file(name+".dat");
 
@@ -51,7 +54,9 @@ void decrypt(string name, short method, int seed){
 
         text = bin_to_text(text);
 
-        write_file(name+".txt", text);
+        return text;
+
+        //write_file(name+".txt", text);
     }
 
     else if(method == 2){
@@ -69,7 +74,11 @@ void decrypt(string name, short method, int seed){
 
         bin_to_text(bin_char, size*8, data_char);
 
-       write_file(name+".txt", size, data_char);
+        text = data_char;
+
+        return text;
+
+       //write_file(name+".txt", size, data_char);
 
     }
     else cout<<"Metodo invalido."<<endl;
@@ -91,21 +100,6 @@ string text_to_bin(string text){
 }
 
 void text_to_bin(char *text, unsigned long long size, char *res){
-
-    //unsigned long long size = size_of_array(text);
-    /*unsigned long long index = 0;
-
-    for(unsigned long long i = 0; i<size; i++){
-
-        for(int k = 0; k<8; k++){
-
-            if(text[i] != '\0'){
-                res[index] = ( char( ( ((text[i]<<k)&(0x80))/128) + 48 ) );
-                index++;
-            }
-            else res[index] = '\0';
-        }
-    }*/
 
     unsigned long long index = 0;
 

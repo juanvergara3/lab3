@@ -9,8 +9,8 @@
 
 using namespace std;
 
-void encrypt(string name, short method,  int seed);
-void decrypt(string name, short method,  int seed);
+void encrypt(string name, string text, short method,  int seed);
+string decrypt(string name, short method,  int seed);
 
 string text_to_bin(string text);
 void text_to_bin(char *text, unsigned long long size,char *res);
