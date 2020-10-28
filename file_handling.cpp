@@ -135,3 +135,15 @@ unsigned long long size_of_array(char *array){ //Posiblemente inutil
 
     return size;
 }
+
+bool is_number(string s){
+
+    for(unsigned long long k = 0; k<s.length(); k++){
+
+        if(isdigit(s[k]) == false) return false;
+
+    }
+
+    return true;
+
+}

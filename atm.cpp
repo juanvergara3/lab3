@@ -23,8 +23,23 @@ bool validate_user(string user, string password, short method, int seed){
     }
 }
 
-void register_user(string user, string password, string amount, short method, int seed){
+void register_user(string user, string password, int amount, short method, int seed){
 
+    cout<<"- - - - - - - - - - - -"<<endl;
+
+    string ref = decrypt("users", method, seed), num = to_string(amount);
+
+    if (ref.find(user) != string::npos)
+        cout<<"Registro fallido, el usuario ya existe"<<endl;
+    else{
+
+        ref.append(user+','+password+','+num+"\r\n");
+
+        encrypt("users", ref, method, seed);
+
+        cout<<"usuario registrado exitosamente"<<endl;
+
+    }
 }
 
 void withdraw(string user, int retiro, short method, int seed){
@@ -34,8 +49,6 @@ void withdraw(string user, int retiro, short method, int seed){
     unsigned long long start, finish;
 
     ref  = decrypt("users", method, seed);
-
-    //cout<<ref<<endl;
 
     start = ref.find(user) + user.length() + 1;
 
@@ -98,4 +111,25 @@ void check_balance(string user, short method, int seed){
 
     cout<<"Su saldo actual es: "<<res<<endl;
 
+}
+
+void display_users(short method, int seed){
+    cout<<"- - - - - - - - - - - -"<<endl;
+    cout<<"Formato de salida:"<<endl;
+    cout<<"\"Cedula,clave,saldo\"\n"<<endl;
+
+    string ref = decrypt("users", method, seed);
+
+    cout<<ref<<endl;
+    cout<<"- - - - - - - - - - - -"<<endl;
+}
+
+void new_admin_password(string password, short method, int seed){
+    cout<<"- - - - - - - - - - - -"<<endl;
+
+    encrypt("sudo", password, method, seed);
+
+    cout<<"Cambio de contrasena existoso"<<endl;
+
+    cout<<"- - - - - - - - - - - -"<<endl;
 }

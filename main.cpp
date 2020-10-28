@@ -1,16 +1,15 @@
 #include <iostream>
 #include "encription.h"
 #include "atm.h"
+#include "file_handling.h"
 using namespace std;
 
 int main()
 {
     bool running = true, sub_menu = true, validation;
-    string user, password, amount;
+    string user, password;
     short main_menu, user_menu, method = 1;
     int retiro, seed = 4;
-
-    //encrypt("users", "", 1 ,4);
 
     while(running){
 
@@ -44,13 +43,15 @@ int main()
 
                 if(validation){
 
+                    cout<<"Bienvenido. ";
+
                     withdraw(user, 1000, method, seed);
 
                     sub_menu = true;
 
                     while(sub_menu){
 
-                        cout<<"Bienvenido. Ingrese 1 para consultar saldo, 2 para retirar o -1 para salir: "; cin>>user_menu;
+                        cout<<"Ingrese 1 para consultar saldo, 2 para retirar o -1 para salir: "; cin>>user_menu;
 
                         while(cin.fail()) { //validacion de entrada
                             cin.clear();
@@ -70,21 +71,28 @@ int main()
                         case 2:{ //retirar
 
                             while(true){
-                                cout<<"Ingrese la cantidad a retirar: "; cin>>retiro;
+                                cout<<"Ingrese la cantidad a retirar (0 para cancelar): "; cin>>retiro;
 
                                 while(cin.fail()) { //validacion de entrada
                                     cin.clear();
                                     cin.ignore(numeric_limits<streamsize>::max(),'\n');
                                     cout << "Cantidad no valida"<<endl;
-                                    cout<<"Ingrese la cantidad a retirar: "; cin>>user_menu;
+                                    cout<<"Ingrese la cantidad a retirar: "; cin>>retiro;
                                 }
 
                                 if(retiro>0){
 
                                     withdraw(user, retiro, method, seed);
 
+                                    cout<<"Retiro exitoso por valor de: "<<retiro<<endl;
+                                    cout<<"Saldo restante: ";
+                                    check_balance(user, method, seed);
+
                                     break;
                                 }
+
+                                else if(retiro == 0) break;
+
                                 else cout<<"Cantidad no valida"<<endl;
                             }
 
@@ -93,8 +101,9 @@ int main()
 
                             break;
                         }
-                        case -1:{
+                        case -1:{ //salir
                             sub_menu = false;
+                            cout<<"- - - - - - - - - - - -"<<endl;
                             break;
                         }
                         default:{
@@ -133,17 +142,21 @@ int main()
 
                 if(validation){
 
+                    cout<<"- - - - - - - - - - - -"<<endl;
+
+                    cout<<"Bienvenido Admin. ";
+
                     sub_menu = true;
 
                     while(sub_menu){
 
-                        cout<<"Bienvenido Admin. Ingrese 1 para agregar un usuario o -1 para salir: "; cin>>user_menu;
+                        cout<<"Ingrese 1 para agregar un usuario, 2 para ver todos los usuarios, 3 para cambiar la contrasena o -1 para salir: "; cin>>user_menu;
 
                         while(cin.fail()) { //validacion de entrada
                             cin.clear();
                             cin.ignore(numeric_limits<streamsize>::max(),'\n');
                             cout << "Opcion no valida"<<endl;
-                            cout<<"Ingrese 1 para agregar un usuario o -1 para salir: "; cin>>user_menu;
+                            cout<<"Ingrese 1 para agregar un usuario, 2 para ver todos los usuarios, 3 para cambiar la contrasena o -1 para salir: "; cin>>user_menu;
                         }
 
                         switch(user_menu){
@@ -152,13 +165,54 @@ int main()
 
                             while(true){
 
+                                cout<<"- - - - - - - - - - - -"<<endl;
+
                                 cout<<"Ingrese los datos del nuevo usuario:"<<endl;
 
-                                cout<<"Cedula: "; cin>>user;
-                                cout<<"Clave: "; cin>>password;
-                                cout<<"Saldo: "; cin>>amount;
-                                cout<<"Ingrese 0 para cancelar o 1 para confirmar: "; cin>>validation; // keep an eye on this ******
+                                while(true){ //verifica que el usuario no contenga comas y que sea un numero
+                                    cout<<"Cedula: "; cin>>user;
 
+                                    size_t *found = new size_t;
+                                    *found = user.find(',');
+
+                                    if (*found != std::string::npos)
+                                        cout << "La cedula no puede contener ','"<<endl;
+                                    else{
+                                        if(is_number(user) == true){
+                                            delete found;
+                                            break;
+                                        }
+                                        else cout<<"La cedula debe ser un numero"<<endl;
+                                    }
+                                }
+
+                                while(true){ //verifica que la clave no contenga comas y que no sea solo numeros
+                                    cout<<"Clave: "; cin>>password;
+
+                                    size_t *found = new size_t;
+                                    *found = password.find(',');
+
+                                    if (*found != std::string::npos)
+                                        cout << "La clave no puede contener ','"<<endl;
+                                    else{
+                                        if(is_number(password) == true)
+                                            cout<<"La clave debe tener numeros y letras"<<endl;
+                                        else {
+                                            delete found;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                cout<<"Saldo: "; cin>>retiro;
+                                while(cin.fail()) { //validacion de entrada
+                                    cin.clear();
+                                    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                                    cout << "saldo invalido"<<endl;
+                                    cout<<"Saldo: "; cin>>retiro;
+                                }
+
+                                cout<<"Ingrese 0 para cancelar o 1 para confirmar: "; cin>>validation;
                                 while(cin.fail()) { //validacion de entrada
                                     cin.clear();
                                     cin.ignore(numeric_limits<streamsize>::max(),'\n');
@@ -167,25 +221,49 @@ int main()
                                 }
 
                                 if(validation){
-                                   register_user(user, password, amount, method, seed);
+
+                                   register_user(user, password, retiro, method, seed);
+
+                                   cout<<"- - - - - - - - - - - -"<<endl;
+
                                    break;
                                 }
                             }
 
                             password.clear();
-                            amount.clear();
+                            retiro = 0;
                             user.clear();
 
                             break;
                         }
-                        case -1:{
-                            sub_menu = false;
+
+                        case 2:{ // ver todos los usuarios
+                            display_users(method, seed);
                             break;
                         }
+
+                        case 3:{
+
+                                cout<<"Nueva contrasena: "; cin>>password;
+                                cout<<"Confirmar contrasena: ";cin>>user;
+
+                                if(password == user) new_admin_password(password, method, seed);
+                                else cout<<"La contrasenas no coinciden"<<endl;
+
+                            break;
+                        }
+
+                        case -1:{
+                            sub_menu = false;
+                            cout<<"- - - - - - - - - - - -"<<endl;
+                            break;
+                        }
+
                         default:{
                             cout<<"Opcion no valida"<<endl;
                             break;
                         }
+
                         } // final switch
 
                     } // final while interno

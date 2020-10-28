@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <stdio.h>
+#include <cctype>
 
 using namespace std;
 
@@ -16,5 +17,7 @@ void read_file(string name, char *res);
 
 unsigned long long size_of_file(string name);
 unsigned long long size_of_array(char *array);
+
+bool is_number(string s);
 
 #endif // FILE_HANDLING_H
