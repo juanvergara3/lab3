@@ -4,8 +4,6 @@ void encrypt(string name, string text, short method, int seed){
 
     if(method == 1){
 
-        //text = read_file(name+".txt");
-
         text = text_to_bin(text);
 
         text = encrypt_method_1(text, seed);
@@ -17,16 +15,12 @@ void encrypt(string name, string text, short method, int seed){
 
     else if(method == 2){
 
-        //unsigned long long size = size_of_file(name+".txt");
-
-         unsigned long long size = text.length()+1;
+        unsigned long long size = text.length()+1;
 
         char data_char[size];
         char bin_char[size*8];
 
         strcpy (data_char, text.c_str());
-
-        //read_file(name+".txt", data_char);
 
         text_to_bin(data_char, size, bin_char);
 
@@ -55,8 +49,6 @@ string decrypt(string name, short method, int seed){
         text = bin_to_text(text);
 
         return text;
-
-        //write_file(name+".txt", text);
     }
 
     else if(method == 2){
@@ -77,8 +69,6 @@ string decrypt(string name, short method, int seed){
         text = data_char;
 
         return text;
-
-       //write_file(name+".txt", size, data_char);
 
     }
     else cout<<"Metodo invalido."<<endl;
@@ -194,7 +184,7 @@ void bin_to_text(char *text, unsigned long long size, char *res){
     delete[] temp;
 }
 
-string encrypt_method_1(string data, int seed){ //Pendiente
+string encrypt_method_1(string data, int seed){
 
     unsigned long long seed_reference = seed;
 
@@ -204,11 +194,11 @@ string encrypt_method_1(string data, int seed){ //Pendiente
 
     int ceros, unos;
 
-    for(unsigned long long current_index = 0, previous_index = 0; current_index<data.length(); current_index++){ //recorre todo el string data
+    for(unsigned long long current_index = 0, previous_index = 0; current_index<data.length()+1; current_index++){ //recorre todo el string data
 
         group += data[current_index]; //crea un grupo de tamaño seed
 
-        if( current_index - previous_index + 1 == seed_reference){ //cuando pasa un grupo
+        if( current_index - previous_index + 1 == seed_reference || current_index == data.length()){ //cuando pasa un grupo
 
             previous_index = current_index + 1;
 
@@ -223,7 +213,7 @@ string encrypt_method_1(string data, int seed){ //Pendiente
 
                }
 
-               res = group;
+               //res = group;
                first = true;
            }
 
@@ -268,19 +258,20 @@ string encrypt_method_1(string data, int seed){ //Pendiente
                        }
                    }
                }
-               res += group;
+
            }
 
            //para todos los grupos:
-
+           res.append(group);
            group.clear();
 
         }
     }
+
     return res;
 }
 
-string decrypt_method_1(string data, int seed){ //Pendiente
+string decrypt_method_1(string data, int seed){
 
     unsigned long long seed_reference = seed;
 
@@ -290,11 +281,13 @@ string decrypt_method_1(string data, int seed){ //Pendiente
 
     int ceros, unos;
 
-    for(unsigned long long current_index = 0; current_index<data.length(); current_index++){ //recorre todo el string data
+    for(unsigned long long current_index = 0, previous_index = 0; current_index<data.length()+1; current_index++){ //recorre todo el string data
 
         group += data[current_index]; //crea un grupo de tamaño seed
 
-        if( group.length() == seed_reference){ //cuando pasa un grupo
+        if( current_index - previous_index + 1 == seed_reference  || current_index == data.length() ){ //cuando pasa un grupo
+
+            previous_index = current_index + 1;
 
            if(first == false){ //para el primer grupo
 
@@ -305,9 +298,9 @@ string decrypt_method_1(string data, int seed){ //Pendiente
 
                }
 
+               //res = group;
                prev = group;
 
-               res = group;
                first = true;
            }
 
@@ -354,11 +347,11 @@ string decrypt_method_1(string data, int seed){ //Pendiente
 
                prev = group;
 
-               res.append(group);
+
            }
 
            //para todos los grupos:
-
+           res.append(group);
            group.clear();
 
         }

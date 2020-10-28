@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include "encription.h"
 #include "atm.h"
 #include "file_handling.h"
@@ -8,8 +10,32 @@ int main()
 {
     bool running = true, sub_menu = true, validation;
     string user, password;
-    short main_menu, user_menu, method = 1;
-    int retiro, seed = 4;
+    short main_menu, user_menu, method, old_method;
+    int retiro, seed, old_seed;
+
+    old_method = short(stoi(read_file("M.dat"))); //lee el metodo y la semilla que se uso en la anterior ejecucion
+    old_seed  = stoi((read_file("S.dat")));
+
+    //cout<<old_method<<' '<<old_seed<<endl;
+    //encrypt("sudo", "adminpass21", old_method, old_seed);
+    //cout<<decrypt("sudo", old_method, old_seed)<<endl;
+
+    srand((unsigned) time(0)); //genera un nuevo metodo y se semilla (entre 1 y 20) aleatorios
+    method = rand() % 2 + 1;
+    seed = rand() % 20 + 1;
+
+    //cout<<method<<' '<<seed<<endl;
+
+    write_file("M.dat", to_string(method)); //guarda estos nuevos metodos y semillas para usarse en la siguiente ejecucion
+    write_file("S.dat", to_string(seed));
+
+    user = decrypt("users", old_method, old_seed); //desencripta con la semilla y metodo viejos
+    encrypt("users", user, method, seed); //encripta con la semilla y metodo nuevos
+    user.clear();
+
+    password  = decrypt("sudo", old_method, old_seed); //desencripta con la semilla y metodo viejos
+    encrypt("sudo", password, method, seed); //encripta con la semilla y metodo nuevos
+    password.clear();
 
     while(running){
 
@@ -136,7 +162,7 @@ int main()
 
                 if(password == "-1") break;
 
-                validation = validate_user("admin", password,1, 4);
+                validation = validate_user("admin", password,method, seed);
 
                 password.clear();
 

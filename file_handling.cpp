@@ -4,9 +4,9 @@ void write_file(string name, string data) {
 
     fstream file (name, fstream::out | fstream::binary);
 
-    file<<data;
+    //file<<data;
 
-    //file.write(data.c_str(), data.length());
+    file.write(data.c_str(), data.length());
 
     file.close();
 }
