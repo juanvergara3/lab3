@@ -1,8 +1,6 @@
 #ifndef ATM_H
 #define ATM_H
 
-//#include<iostream>
-//#include <string>
 #include "encription.h"
 
 using namespace std;

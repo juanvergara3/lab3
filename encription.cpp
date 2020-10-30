@@ -20,7 +20,7 @@ void encrypt(string name, string text, short method, int seed){
         char data_char[size];
         char bin_char[size*8];
 
-        strcpy (data_char, text.c_str());
+        strcpy(data_char, text.c_str()); //convertir text en un char[]
 
         text_to_bin(data_char, size, bin_char);
 
@@ -29,8 +29,8 @@ void encrypt(string name, string text, short method, int seed){
         bin_to_text(bin_char, size*8, data_char);
 
         write_file(name+".dat", size, data_char);
-
     }
+
     else cout<<"Metodo invalido."<<endl;
 }
 
@@ -69,7 +69,6 @@ string decrypt(string name, short method, int seed){
         text = data_char;
 
         return text;
-
     }
     else cout<<"Metodo invalido."<<endl;
 }
@@ -83,7 +82,6 @@ string text_to_bin(string text){
         for(int k = 0; k<8; k++){
 
             bin.push_back( char( ( ((text[i]<<k)&(0x80))/128) + 48 ) );
-
         }
     }
     return bin;
@@ -97,10 +95,8 @@ void text_to_bin(char *text, unsigned long long size, char *res){
 
         for(int k = 0; k<8; k++){
 
-
                 res[index] = ( char( ( ((text[i]<<k)&(0x80))/128) + 48 ) );
                 index++;
-
         }
     }
     res[index] = '\0';
@@ -130,11 +126,9 @@ string bin_to_text(string text){
             }
 
             res += char(dec);
-
             temp.clear();
 
         }
-
     }
     return res;
 }
@@ -154,11 +148,7 @@ void bin_to_text(char *text, unsigned long long size, char *res){
 
             temp[8] = '\0';
 
-            sscanf(temp, "%d", &bin); //what
-
-            //int index = 0;
-            //for (; temp[index]  != '\0'; ++index)
-                //bin = bin * 10 + temp[index] - '0'; // borrar en el siguiente commit ****
+            sscanf(temp, "%d", &bin); //convierte temp en int
 
             base = 1;
             dec = 0;
@@ -170,17 +160,12 @@ void bin_to_text(char *text, unsigned long long size, char *res){
                 bin = bin / 10;
             }
 
-            //if(char(dec) == '\0') dec = 32; //wtf????
-
-            //if(char(dec) == '`') dec = 32; //What the actual damn //borrar en el siguiente commit ****
-
             res[res_index] = char(dec);
 
             res_index++;
 
         }
     }
-
     delete[] temp;
 }
 
@@ -198,13 +183,13 @@ string encrypt_method_1(string data, int seed){
 
         group += data[current_index]; //crea un grupo de tamaño seed
 
-        if( current_index - previous_index + 1 == seed_reference || current_index == data.length()){ //cuando pasa un grupo
+        if(current_index - previous_index + 1 == seed_reference || current_index == data.length()){ //cuando pasa un grupo. la ultima parte del condicional es por si data.length() no es divisible por seed
 
             previous_index = current_index + 1;
 
            if(first == false){ //para el primer grupo
 
-               prev = group;
+               prev = group; //se guarda el primer grupo para despues
 
                for(unsigned long long k = 0; k<group.length(); k++){ //invierte todos los bits del primer grupo
 
@@ -212,8 +197,6 @@ string encrypt_method_1(string data, int seed){
                    else if (group[k] == '1') group[k] = '0';
 
                }
-
-               //res = group;
                first = true;
            }
 
@@ -231,10 +214,9 @@ string encrypt_method_1(string data, int seed){
 
                        if(group[k] == '0') group[k] = '1';
                        else if (group[k] == '1') group[k] = '0';
-
                    }
                }
-               else if (ceros>unos){
+               else if (ceros>unos){ //invierte cada 2 bits
 
                    for(unsigned long long k = 0; k<group.length(); k++){
 
@@ -242,11 +224,10 @@ string encrypt_method_1(string data, int seed){
 
                            if(group[k] == '0') group[k] = '1';
                            else if (group[k] == '1') group[k] = '0';
-
                        }
                    }
                }
-               else if(ceros < unos){
+               else if(ceros < unos){ //invierte cada 3 bits
 
                    for(unsigned long long k = 0; k<group.length(); k++){
 
@@ -254,11 +235,9 @@ string encrypt_method_1(string data, int seed){
 
                            if(group[k] == '0') group[k] = '1';
                            else if (group[k] == '1') group[k] = '0';
-
                        }
                    }
                }
-
            }
 
            //para todos los grupos:
@@ -267,7 +246,6 @@ string encrypt_method_1(string data, int seed){
 
         }
     }
-
     return res;
 }
 
@@ -285,7 +263,7 @@ string decrypt_method_1(string data, int seed){
 
         group += data[current_index]; //crea un grupo de tamaño seed
 
-        if( current_index - previous_index + 1 == seed_reference  || current_index == data.length() ){ //cuando pasa un grupo
+        if(current_index - previous_index + 1 == seed_reference  || current_index == data.length() ){ //cuando pasa un grupo. la ultima parte del condicional es por si data.length() no es divisible por seed
 
             previous_index = current_index + 1;
 
@@ -295,11 +273,9 @@ string decrypt_method_1(string data, int seed){
 
                    if(group[k] == '0') group[k] = '1';
                    else if (group[k] == '1') group[k] = '0';
-
                }
 
-               //res = group;
-               prev = group;
+               prev = group; //se guarda el primer grupo para despues
 
                first = true;
            }
@@ -320,7 +296,7 @@ string decrypt_method_1(string data, int seed){
 
                    }
                }
-               else if (ceros>unos){
+               else if (ceros>unos){//invierte cada 2 bits
 
                    for(unsigned long long k = 0; k<group.length(); k++){
 
@@ -332,7 +308,7 @@ string decrypt_method_1(string data, int seed){
                        }
                    }
                }
-               else if(ceros < unos){
+               else if(ceros < unos){//invierte cada 3 bits
 
                    for(unsigned long long k = 0; k<group.length(); k++){
 
@@ -347,7 +323,6 @@ string decrypt_method_1(string data, int seed){
 
                prev = group;
 
-
            }
 
            //para todos los grupos:
@@ -357,7 +332,6 @@ string decrypt_method_1(string data, int seed){
         }
     }
     return res;
-
 }
 
 void encrypt_method_2(char *data, unsigned long long size, int seed){
@@ -371,9 +345,9 @@ void encrypt_method_2(char *data, unsigned long long size, int seed){
         group[group_index] = data[current_index]; //crea un grupo de tamaño seed
         group_index++;
 
-        if( current_index - previous_index + 1== seed_reference){ //cuando pasa un grupo
+        if(current_index - previous_index + 1 == seed_reference){ //cuando pasa un grupo
 
-             group[group_index] = '\0';
+            group[group_index] = '\0';
 
             previous_index = current_index + 1;
 
@@ -381,7 +355,7 @@ void encrypt_method_2(char *data, unsigned long long size, int seed){
 
             for(int it = 0, temp = seed; it<seed; it++, group_index++){ //encripta el grupo creado anteriormente
 
-                data[ (current_index + 1) - temp ] = group[group_index];
+                data[ (current_index + 1) - temp ] = group[group_index]; //primero asigna el ultimo bit de group al primero de data, luego asigna los primeros 7 bits de group a los siguientes de data
 
                 temp--;
 
@@ -426,7 +400,6 @@ void decrypt_method_2(char *data, unsigned long long size, int seed){
         }
     }
     delete[] group;
-
 }
 
 

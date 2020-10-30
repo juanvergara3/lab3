@@ -6,6 +6,7 @@
 #include <string>
 #include <stdio.h>
 #include <cctype>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ string read_file(string name);
 void read_file(string name, char *res);
 
 unsigned long long size_of_file(string name);
-unsigned long long size_of_array(char *array);
+//unsigned long long size_of_array(char *array);
 
 bool is_number(string s);
 

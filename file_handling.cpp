@@ -4,8 +4,6 @@ void write_file(string name, string data) {
 
     fstream file (name, fstream::out | fstream::binary);
 
-    //file<<data;
-
     file.write(data.c_str(), data.length());
 
     file.close();
@@ -18,34 +16,7 @@ void write_file(string name, unsigned long long size, char *data){
     file.write(data, size);
 
     file.close();
-
 }
-
-/*
-string leer_txt(string name) { //linea a linea
-
-    fstream file(name, fstream::in);
-
-    if(file.is_open()){
-
-        string temp, temp2;
-
-        while(! file.eof() ){
-
-            getline(file, temp2);
-            temp.append(temp2);
-            temp.append("\n");
-
-        }
-        file.close();
-
-        return temp;
-
-    } else{
-       cout<<"Error de apertura!"<<endl;
-       return "";
-    }
-}*/
 
 string read_file(string name) {
 
@@ -55,8 +26,7 @@ string read_file(string name) {
 
         string res;
         char temp;
-
-         unsigned long long size = size_of_file(name);
+        unsigned long long size = size_of_file(name);
 
         for(unsigned long long k = 0; k<size; k++){
 
@@ -67,12 +37,12 @@ string read_file(string name) {
         }
 
         file.close();
-
         return res;
+    }
 
-    } else{
-       cout<<"Error de apertura!"<<endl;
-       return "";
+    else{
+        cout<<"Error de apertura!"<<endl;
+        return "";
     }
 }
 
@@ -120,21 +90,21 @@ unsigned long long size_of_file(string name){
      }
 }
 
-unsigned long long size_of_array(char *array){ //Posiblemente inutil
+//unsigned long long size_of_array(char *array){ //Posiblemente inutil
 
-    unsigned long long size = 0;
+//    unsigned long long size = 0;
 
-    for(unsigned long long k = 0;;k++){ // calcula el tamaño del arreglo de caracteres array
+//    for(unsigned long long k = 0;;k++){ // calcula el tamaño del arreglo de caracteres array
 
-        if(array[k] != '\0') size++;
-        else{
-            size++;
-            break;
-        }
-    }
+//        if(array[k] != '\0') size++;
+//        else{
+//            size++;
+//            break;
+//        }
+//    }
 
-    return size;
-}
+//    return size;
+//}
 
 bool is_number(string s){
 
@@ -143,7 +113,5 @@ bool is_number(string s){
         if(isdigit(s[k]) == false) return false;
 
     }
-
     return true;
-
 }

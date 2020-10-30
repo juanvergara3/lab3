@@ -1,9 +1,7 @@
-#include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include "encription.h"
 #include "atm.h"
-#include "file_handling.h"
+
 using namespace std;
 
 int main()
@@ -16,15 +14,9 @@ int main()
     old_method = short(stoi(read_file("M.dat"))); //lee el metodo y la semilla que se uso en la anterior ejecucion
     old_seed  = stoi((read_file("S.dat")));
 
-    //cout<<old_method<<' '<<old_seed<<endl;
-    //encrypt("sudo", "adminpass21", old_method, old_seed);
-    //cout<<decrypt("sudo", old_method, old_seed)<<endl;
-
     srand((unsigned) time(0)); //genera un nuevo metodo y se semilla (entre 1 y 20) aleatorios
     method = rand() % 2 + 1;
     seed = rand() % 20 + 1;
-
-    //cout<<method<<' '<<seed<<endl;
 
     write_file("M.dat", to_string(method)); //guarda estos nuevos metodos y semillas para usarse en la siguiente ejecucion
     write_file("S.dat", to_string(seed));
@@ -37,7 +29,7 @@ int main()
     encrypt("sudo", password, method, seed); //encripta con la semilla y metodo nuevos
     password.clear();
 
-    while(running){
+    while(running){ //ciclo principal
 
         cout<<"\nIngrese 1 para iniciar sesion, 2 para acceder al modo administrador, o -1 para salir: "; cin>>main_menu;
 
@@ -75,7 +67,7 @@ int main()
 
                     sub_menu = true;
 
-                    while(sub_menu){
+                    while(sub_menu){ // menu de usuario
 
                         cout<<"Ingrese 1 para consultar saldo, 2 para retirar o -1 para salir: "; cin>>user_menu;
 
@@ -113,7 +105,7 @@ int main()
                                     cout<<"Retiro exitoso por valor de: "<<retiro<<endl;
                                     cout<<"Saldo restante: ";
                                     check_balance(user, method, seed);
-
+                                    retiro = 0;
                                     break;
                                 }
 
@@ -121,17 +113,15 @@ int main()
 
                                 else cout<<"Cantidad no valida"<<endl;
                             }
-
-                            retiro = 0;
-                            user.clear();
-
                             break;
                         }
+
                         case -1:{ //salir
                             sub_menu = false;
                             cout<<"- - - - - - - - - - - -"<<endl;
                             break;
                         }
+
                         default:{
                             cout<<"Opcion no valida"<<endl;
                             break;
@@ -261,7 +251,7 @@ int main()
                             user.clear();
 
                             break;
-                        }
+                        } // final del registro de usuario
 
                         case 2:{ // ver todos los usuarios
                             display_users(method, seed);
@@ -317,6 +307,5 @@ int main()
 
         }//final switch principal
     }//final del while principal
-
     return 0;
 }

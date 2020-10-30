@@ -14,7 +14,7 @@ bool validate_user(string user, string password, short method, int seed){
     }
 
     else{
-        ref  = decrypt("users", method, seed);
+        ref = decrypt("users", method, seed);
 
         if (ref.find(user+','+password) != string::npos)
             return true;
@@ -31,6 +31,7 @@ void register_user(string user, string password, int amount, short method, int s
 
     if (ref.find(user) != string::npos)
         cout<<"Registro fallido, el usuario ya existe"<<endl;
+
     else{
 
         ref.append(user+','+password+','+num+"\r\n");
@@ -38,7 +39,6 @@ void register_user(string user, string password, int amount, short method, int s
         encrypt("users", ref, method, seed);
 
         cout<<"usuario registrado exitosamente"<<endl;
-
     }
 }
 
@@ -90,10 +90,10 @@ void withdraw(string user, int retiro, short method, int seed){
 
 void check_balance(string user, short method, int seed){
 
-    string ref, res;
+    string ref;
     unsigned long long start, finish;
 
-    ref  = decrypt("users", method, seed);
+    ref = decrypt("users", method, seed);
 
     start = ref.find(user) + user.length() + 1;
 
@@ -105,11 +105,13 @@ void check_balance(string user, short method, int seed){
 
     strcpy (cstr, ref.c_str());
 
-    for(;start < finish; start ++) res += cstr[start];
+    cout<<"Su saldo actual es: ";
+
+    for(;start < finish; start ++) cout<<cstr[start];
 
     delete [] cstr;
 
-    cout<<"Su saldo actual es: "<<res<<endl;
+    cout<<endl;
 
 }
 
