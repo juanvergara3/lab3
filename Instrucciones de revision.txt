@@ -1,0 +1,4 @@
+Hola profe, por la forma como esta hecho el programa se necesitan algunos archivos pre-hechos
+que estan subidos al repositorio en la carpeta de "Archivos esenciales". Solo debe descargarlos
+y ponerlos adentro de la carpeta del build ANTES DE EJECUTAR EL PROGRAMA.
+Al revisar la primera parte del codigo se dara cuenta de porque son tan necesarios estos archivos.
